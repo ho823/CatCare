@@ -15,21 +15,17 @@ import * as React from 'react';
 import { ColorSchemeName, Pressable } from 'react-native';
 
 import Colors from '../constants/Colors';
-import useColorScheme from '../hooks/useColorScheme';
 import AnimalSheet from '../screens/AnimalSheet';
 import Historical from '../screens/Historical';
 import Home from '../screens/Home';
-import TabOneScreen from '../screens/TabOneScreen';
-import TabTwoScreen from '../screens/TabTwoScreen';
 import Vaccine from '../screens/Vaccine';
 import { RootStackParamList, RootTabParamList, RootTabScreenProps } from '../types';
 import LinkingConfiguration from './LinkingConfiguration';
 
-export default function Navigation({ colorScheme }: { colorScheme: ColorSchemeName }) {
+export default function Navigation() {
   return (
     <NavigationContainer
-      linking={LinkingConfiguration}
-      theme={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+      linking={LinkingConfiguration}>
       <RootNavigator />
     </NavigationContainer>
   );
@@ -56,13 +52,13 @@ function RootNavigator() {
 const BottomTab = createBottomTabNavigator<RootTabParamList>();
 
 function BottomTabNavigator() {
-  const colorScheme = useColorScheme();
 
   return (
     <BottomTab.Navigator
       initialRouteName="TabOne"
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
+        tabBarActiveTintColor: '#F9954F',
+        tabBarInactiveTintColor: '#37C391',
       }}>
       <BottomTab.Screen
         name="Home"
