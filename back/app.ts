@@ -13,6 +13,7 @@ app.use(express.urlencoded({
   extended: true
 }));
 
+
 app.get('/', (request: any, response: any) => {
   response.send('Bienvenue sur Express');
 });
@@ -30,18 +31,17 @@ app.get('/api/animal', (req: any, res:any) => {
   })
 })
 
-app.post('/api/animal', (req: any, res: any) => {
+app.put('/api/animal/:id', (req: any, res: any) => {
+  const idAnimal = req.params.id;
   const newAnimal = req.body;
-  connectionDb.query('INSERT INTO animal SET ?', newAnimal, (err: any, results: any) => {
+  connectionDb.query('UPDATE animal SET ? WHERE id = ?', [newAnimal, idAnimal], (err: any, results: any) => {
     if (err) {
       res.status(500).json({
         message: 'Sauvegarde impossible',
         error: err,
       })
     } else {
-      res.status(200).json({
-        res: results
-      })
+      res.sendStatus(200);
     }
   })
 /*     const newAnimal = {
@@ -49,6 +49,73 @@ app.post('/api/animal', (req: any, res: any) => {
         name: req.body.name,
         age: req.body.price
     } */
+})
+
+app.get('/api/vaccine', (req: any, res:any) => {
+  connectionDb.query('SELECT * FROM vaccine', (err: any, results: any) => {
+    if (err) {
+      res.status(500).json({
+        message: "Affichage impossible",
+        error: err,
+      })
+    } else {
+      res.json(results)
+    }
+  })
+})
+
+app.get('/api/meds', (req: any, res:any) => {
+  connectionDb.query('SELECT * FROM meds', (err: any, results: any) => {
+    if (err) {
+      res.status(500).json({
+        message: "Affichage impossible",
+        error: err,
+      })
+    } else {
+      res.json(results)
+    }
+  })
+})
+
+app.delete('/api/meds/:id', (req: any, res: any) => {
+  const idMeds = req.params.id;
+  connectionDb.query('DELETE FROM meds WHERE id = ?', [idMeds], (err: any) => {
+    if (err) {
+      console.log(err);
+      res.status(500).json({
+        message: 'Suppression impossible',
+        error: err,
+      })
+    } else {
+      res.sendStatus(200);
+    }
+  })
+})
+
+app.get('/api/historical', (req: any, res:any) => {
+  connectionDb.query('SELECT * FROM historical', (err: any, results: any) => {
+    if (err) {
+      res.status(500).json({
+        message: "Affichage impossible",
+        error: err,
+      })
+    } else {
+      res.json(results)
+    }
+  })
+})
+
+app.post('/api/historical', (req: any, res: any) => {
+  const formHistoric = req.body;
+  connectionDb.query('INSERT INTO historical SET ?', formHistoric, (err: any, results: any) => {
+    if (err) {
+      console.log(err)
+      res.status(500).json({
+        message: 'Ajout impossible',
+        error: err,
+      })
+    }
+  })
 })
 
 app.listen(port, (err: any) => {

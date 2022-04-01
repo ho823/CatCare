@@ -2,7 +2,7 @@ import { StyleSheet, Image, View, Text } from 'react-native';
 import axios from 'axios';;
 import { useEffect, useState } from 'react';
 import logoDark from '../assets/images/logo-dark.png';
-import { withSafeAreaInsets } from 'react-native-safe-area-context';
+import rabbitCat from '../assets/images/rabbit-hat-cat.png';
 
 export default function AnimalSheet() {
   const [error, setError] = useState() as any;
@@ -29,15 +29,16 @@ export default function AnimalSheet() {
       <View style={styles.imgContent}>
         <Image style={styles.img} source={logoDark} />
         <Text>CatCare</Text>
+        <Image source={rabbitCat} />
       </View>
       <View style={styles.whiteElm}>
         {animal.map((animal: any) =>
         <>
         <View>
-          <Text key={animal.id}>{animal.name}</Text>
-          <Text>{animal.age}</Text>
-          <Text>{animal.weight}</Text>
-          <Text>{animal.sex}</Text>
+          <Text style={styles.name} key={animal.id}>{animal.name}</Text>
+          <Text style={styles.square}>{animal.age}</Text>
+          <Text style={styles.square}>{animal.weight}</Text>
+          <Text style={styles.square}>{animal.sex}</Text>
         </View>
         <View>
         </View>
@@ -66,5 +67,14 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 50,
     borderTopRightRadius: 50,
     flex: 2,
+  },
+  name: {
+    fontSize: 24,
+  },
+  square: {
+    backgroundColor: '#F9954F',
+    borderRadius: 8,
+    height: 30,
+    width: 30,
   }
 });
