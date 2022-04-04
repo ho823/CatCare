@@ -25,9 +25,10 @@ app.get('/api/animal', (req, res) => {
         }
     });
 });
-app.post('/api/animal', (req, res) => {
+app.put('/api/animal/:id', (req, res) => {
+    const idAnimal = req.params.id;
     const newAnimal = req.body;
-    connectionDb.query('INSERT INTO animal SET ?', newAnimal, (err, results) => {
+    connectionDb.query('UPDATE animal SET ? WHERE id = ?', [newAnimal, idAnimal], (err, results) => {
         if (err) {
             res.status(500).json({
                 message: 'Sauvegarde impossible',
@@ -35,9 +36,7 @@ app.post('/api/animal', (req, res) => {
             });
         }
         else {
-            res.status(200).json({
-                res: results
-            });
+            res.sendStatus(200);
         }
     });
     /*     const newAnimal = {
@@ -45,6 +44,72 @@ app.post('/api/animal', (req, res) => {
             name: req.body.name,
             age: req.body.price
         } */
+});
+app.get('/api/vaccine', (req, res) => {
+    connectionDb.query('SELECT * FROM vaccine', (err, results) => {
+        if (err) {
+            res.status(500).json({
+                message: "Affichage impossible",
+                error: err,
+            });
+        }
+        else {
+            res.json(results);
+        }
+    });
+});
+app.get('/api/meds', (req, res) => {
+    connectionDb.query('SELECT * FROM meds', (err, results) => {
+        if (err) {
+            res.status(500).json({
+                message: "Affichage impossible",
+                error: err,
+            });
+        }
+        else {
+            res.json(results);
+        }
+    });
+});
+app.delete('/api/meds/:id', (req, res) => {
+    const idMeds = req.params.id;
+    connectionDb.query('DELETE FROM meds WHERE id = ?', [idMeds], (err) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: 'Suppression impossible',
+                error: err,
+            });
+        }
+        else {
+            res.sendStatus(200);
+        }
+    });
+});
+app.get('/api/historical', (req, res) => {
+    connectionDb.query('SELECT * FROM historical', (err, results) => {
+        if (err) {
+            res.status(500).json({
+                message: "Affichage impossible",
+                error: err,
+            });
+        }
+        else {
+            res.json(results);
+        }
+    });
+});
+app.post('/api/historical', (req, res) => {
+    const formHistoric = req.body;
+    connectionDb.query('INSERT INTO historical SET ?', formHistoric, (err, results) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: 'Ajout impossible',
+                error: err,
+            });
+        }
+    });
 });
 app.listen(port, (err) => {
     if (err) {
