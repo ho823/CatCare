@@ -109,6 +109,46 @@ app.post('/api/historical', (req, res) => {
                 error: err,
             });
         }
+        else {
+            res.json(req.body);
+            res.status(200);
+        }
+    });
+});
+app.put('/api/historical/:id', (req, res) => {
+    const idHistorical = req.params.id;
+    const newHistorical = req.body;
+    connectionDb.query('UPDATE animal SET ? WHERE id = ?', [newHistorical, idHistorical], (err, results) => {
+        if (err) {
+            res.status(500).json({
+                message: 'Sauvegarde impossible',
+                error: err,
+            });
+        }
+        else {
+            res.sendStatus(200);
+            res.json(req.body);
+        }
+    });
+    /*     const newAnimal = {
+            id: animals.length + 1,
+            name: req.body.name,
+            age: req.body.price
+        } */
+});
+app.delete('/api/historical/:id', (req, res) => {
+    const idHistorical = req.params.id;
+    connectionDb.query('DELETE FROM historical WHERE id = ?', idHistorical, (err) => {
+        if (err) {
+            console.log(err);
+            res.status(500).json({
+                message: 'Suppression impossible',
+                error: err,
+            });
+        }
+        else {
+            res.sendStatus(200);
+        }
     });
 });
 app.listen(port, (err) => {

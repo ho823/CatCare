@@ -34,13 +34,13 @@ export default function AnimalSheet() {
       <View style={styles.whiteElm}>
         {animal.map((animal: any) =>
         <>
-        <View>
+        <View style={styles.cardAnimal}>
           <Text style={styles.name} key={animal.id}>{animal.name}</Text>
-          <Text style={styles.square}>{animal.age}</Text>
-          <Text style={styles.square}>{animal.weight}</Text>
-          <Text style={styles.square}>{animal.sex}</Text>
-        </View>
-        <View>
+          <View style={styles.info}>
+            <Text style={styles.square}>{animal.age} years</Text>
+            <Text style={styles.square}>{animal.weight} kg</Text>
+            <Text style={styles.square}>{animal.sex}</Text>
+          </View>
         </View>
         </>
         )}
@@ -57,10 +57,13 @@ const styles = StyleSheet.create({
   imgContent: {
     backgroundColor: '#FCE3E3',
     flex: 1,
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   img: {
-    height: 150,
-    width: 150,
+    height: 120,
+    width: 120,
   },
   whiteElm: {
     backgroundColor: '#FFFFFF',
@@ -68,13 +71,25 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 50,
     flex: 2,
   },
+  cardAnimal:{
+    padding: 20
+
+  },
+  info: {
+    flexDirection: 'row',
+    justifyContent: 'space-around'
+
+  },
   name: {
     fontSize: 24,
+    marginBottom: 15,
+    textAlign: 'center'
   },
   square: {
     backgroundColor: '#F9954F',
+    padding: 8,
     borderRadius: 8,
-    height: 30,
-    width: 30,
+    height: 80,
+    width: 80,
   }
 });
