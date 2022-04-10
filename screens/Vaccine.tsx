@@ -2,14 +2,15 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Image, ScrollView } from 'react-native';
 import logoGreen from '../assets/images/logo-green.png';
+import { IMeds, IVaccine } from '../types';
 
 
 
 export default function Vaccine() {
 
   const [error, setError] = useState() as any;
-  const [vaccine, setVaccine] = useState([] as any []);
-  const [meds, setMeds] = useState([] as any []);
+  const [vaccine, setVaccine] = useState<IVaccine[]>([]);
+  const [meds, setMeds] = useState<IMeds[]>([]);
 
 
   useEffect(() => {
@@ -17,7 +18,6 @@ export default function Vaccine() {
       try {
         const vaccines = await axios.get(`http://localhost:7070/api/vaccine`);
         setVaccine(vaccines.data);
-        console.log(vaccines)
       } catch (err) {
         setError(err);
         console.log(err)
@@ -34,7 +34,6 @@ export default function Vaccine() {
       try {
         const medical = await axios.get(`http://localhost:7070/api/meds`);
         setMeds(medical.data);
-        console.log(medical)
       } catch (err) {
         setError(err);
         console.log(err)
@@ -47,8 +46,7 @@ export default function Vaccine() {
   return (
     <ScrollView style={styles.page}>
       <View style={styles.imgContent}>
-        <Image style={styles.img} source={logoGreen} />
-        <Text style={styles.logoTitle}>CatCare</Text>
+          <Image style={styles.img} source={logoGreen} />
       </View>
 
       <View style={styles.content}>
@@ -56,9 +54,9 @@ export default function Vaccine() {
         <View style={styles.vaccineContent}>
           {vaccine
           .filter(vaccine => vaccine.animalId === 1)
-          .map((vaccine: any) =>
-          <View style={styles.vaccineAnimal1}>
-            <Text key={vaccine.id} style={styles.name}>{vaccine.name}</Text>
+          .map((vaccine: IVaccine, index: number) =>
+          <View key={index} style={styles.eachElm}>
+            <Text style={styles.name}>{vaccine.name}</Text>
             <View style={styles.bgVaccine}>
             <svg xmlns="http://www.w3.org/2000/svg" 
             data-name="Layer 1" 
@@ -69,7 +67,6 @@ export default function Vaccine() {
             </svg>
             </View>
             <Text style={styles.date}>{vaccine.date}</Text>
-            Animal id : {vaccine.animalId}
           </View>
 
           )}
@@ -79,9 +76,9 @@ export default function Vaccine() {
         <View style={styles.medsContent}>
           {meds
           .filter(vaccine => vaccine.animalId === 1)
-          .map((meds: any) =>
-          <View style={styles.medsAnimal1}>
-            <Text key={meds.id} style={styles.name}>{meds.name}</Text>
+          .map((meds: IMeds, index: number) =>
+          <View key={index} style={styles.eachElm}>
+            <Text style={styles.name}>{meds.name}</Text>
             <View style={styles.bgMeds}>
             <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -93,8 +90,7 @@ export default function Vaccine() {
             </svg>
             </View>
             <Text style={styles.date}>{meds.date}</Text>
-            <Text style={styles.duration}>{meds.duration}</Text>
-            animal id : {meds.animalId}
+            <Text style={styles.duration}>{meds.duration} day</Text>
           </View>
 
           )}
@@ -104,9 +100,9 @@ export default function Vaccine() {
         <View style={styles.vaccineContent}>
           {vaccine
           .filter(vaccine => vaccine.animalId === 2)
-          .map((vaccine: any) =>
-          <View style={styles.vaccineAnimal1}>
-            <Text key={vaccine.id} style={styles.name}>{vaccine.name}</Text>
+          .map((vaccine: IVaccine, index) =>
+          <View key={index} style={styles.eachElm}>
+            <Text style={styles.name}>{vaccine.name}</Text>
             <View style={styles.bgVaccine}>
             <svg xmlns="http://www.w3.org/2000/svg" 
             data-name="Layer 1" 
@@ -126,9 +122,9 @@ export default function Vaccine() {
         <View style={styles.medsContent}>
           {meds
           .filter(vaccine => vaccine.animalId === 2)
-          .map((meds: any) =>
-          <View style={styles.medsAnimal1}>
-            <Text key={meds.id} style={styles.name}>{meds.name}</Text>
+          .map((meds: IMeds, index: number) =>
+          <View key={index} style={styles.eachElm}>
+            <Text style={styles.name}>{meds.name}</Text>
             <View style={styles.bgMeds}>
             <svg 
             xmlns="http://www.w3.org/2000/svg" 
@@ -140,9 +136,14 @@ export default function Vaccine() {
             </svg>
             </View>
             <Text style={styles.date}>{meds.date}</Text>
-            <Text style={styles.duration}>{meds.duration}</Text>
+            {(meds.name === 'Zylkene' ? 
+            <Text style={styles.duration}>
+              {meds.duration} week</Text>
+              :
+              <Text style={styles.duration}>
+              {meds.duration} day</Text>
+              )}
           </View>
-
           )}
         </View>
 
@@ -156,49 +157,49 @@ const styles = StyleSheet.create({
   page: {
     flex: 1,
     backgroundColor: '#FFFFFF',
+    paddingBottom: 150
   },
   imgContent: {
     flex: 1,
     backgroundColor: '#FFFFFF',
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center'
+    marginLeft: 15
   },
   img: {
-    height: 120,
-    width: 120,
-  },
-  logoTitle: {
-    color: '#37C391'
+    width: 179,
+    height: 120
   },
   content: {
-    flex: 2,
+    flex: 4,
     alignItems: 'center',
-    padding: 20,
-
+    marginTop: -54,
   },
   vaccineContent: {
     alignSelf: 'stretch',
     marginBottom: 30,
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    paddingLeft: 30
   },
   medsContent: {
     alignSelf: 'stretch',
     flexDirection: 'row',
-    flexWrap: 'wrap'
+    flexWrap: 'wrap',
+    paddingLeft: 30,
   },
   title: {
-
+    marginBottom: 30,
+    fontSize: 25
   },
   name: {
-
+    marginBottom: 10,
   },
   date: {
-
+    marginTop: 10
   },
   duration: {
-
+    marginTop: 10
   },
   bgMeds: {
     height: 60,
@@ -214,12 +215,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#F2B6B6',
     padding: 5,
   },
-  medsAnimal1: {
-    marginRight: 15
-
-  },
-  vaccineAnimal1: {
-    marginRight: 15
-
+  eachElm: {
+    marginRight: 20,
+    marginBottom: 8
   }
+
 });

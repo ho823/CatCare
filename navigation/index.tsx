@@ -55,7 +55,7 @@ function BottomTabNavigator() {
 
   return (
     <BottomTab.Navigator
-      initialRouteName="TabOne"
+      initialRouteName="Home"
       screenOptions={{
         tabBarActiveTintColor: '#F9954F',
         tabBarInactiveTintColor: '#37C391',

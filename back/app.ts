@@ -2,6 +2,9 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const port = 7070;
+import { Request, Response } from "express";
+import {IAnimal, IHistorical, IMeds, IVaccine} from '../types';
+
 
 
 
@@ -14,12 +17,12 @@ app.use(express.urlencoded({
 }));
 
 
-app.get('/', (request: any, response: any) => {
+app.get('/', (request: Request, response: Response) => {
   response.send('Bienvenue sur Express');
 });
 
-app.get('/api/animal', (req: any, res:any) => {
-  connectionDb.query('SELECT * FROM animal', (err: any, results: any) => {
+app.get('/api/animal', (req: Request, res: Response) => {
+  connectionDb.query('SELECT * FROM animal', (err: Error, results: IAnimal[]) => {
     if (err) {
       res.status(500).json({
         message: "Affichage impossible",
@@ -31,28 +34,23 @@ app.get('/api/animal', (req: any, res:any) => {
   })
 })
 
-app.put('/api/animal/:id', (req: any, res: any) => {
+app.put('/api/animal/:id', (req: Request, res: Response) => {
   const idAnimal = req.params.id;
   const newAnimal = req.body;
-  connectionDb.query('UPDATE animal SET ? WHERE id = ?', [newAnimal, idAnimal], (err: any, results: any) => {
+  connectionDb.query('UPDATE animal SET ? WHERE id = ?', [newAnimal, idAnimal], (err: Error, results: IAnimal) => {
     if (err) {
-      res.status(500).json({
+      return res.status(500).json({
         message: 'Sauvegarde impossible',
         error: err,
       })
     } else {
-      res.sendStatus(200);
+      return res.sendStatus(200).json(req.body);
     }
   })
-/*     const newAnimal = {
-        id: animals.length + 1,
-        name: req.body.name,
-        age: req.body.price
-    } */
 })
 
-app.get('/api/vaccine', (req: any, res:any) => {
-  connectionDb.query('SELECT * FROM vaccine', (err: any, results: any) => {
+app.get('/api/vaccine', (req: Request, res: Response) => {
+  connectionDb.query('SELECT * FROM vaccine', (err: Error, results: IVaccine[]) => {
     if (err) {
       res.status(500).json({
         message: "Affichage impossible",
@@ -64,8 +62,8 @@ app.get('/api/vaccine', (req: any, res:any) => {
   })
 })
 
-app.get('/api/meds', (req: any, res:any) => {
-  connectionDb.query('SELECT * FROM meds', (err: any, results: any) => {
+app.get('/api/meds', (req: Request, res: Response) => {
+  connectionDb.query('SELECT * FROM meds', (err: Error, results: IMeds[]) => {
     if (err) {
       res.status(500).json({
         message: "Affichage impossible",
@@ -77,9 +75,9 @@ app.get('/api/meds', (req: any, res:any) => {
   })
 })
 
-app.delete('/api/meds/:id', (req: any, res: any) => {
+app.delete('/api/meds/:id', (req: Request, res: Response) => {
   const idMeds = req.params.id;
-  connectionDb.query('DELETE FROM meds WHERE id = ?', [idMeds], (err: any) => {
+  connectionDb.query('DELETE FROM meds WHERE id = ?', [idMeds], (err: Error) => {
     if (err) {
       console.log(err);
       res.status(500).json({
@@ -92,8 +90,8 @@ app.delete('/api/meds/:id', (req: any, res: any) => {
   })
 })
 
-app.get('/api/historical', (req: any, res:any) => {
-  connectionDb.query('SELECT * FROM historical', (err: any, results: any) => {
+app.get('/api/historical', (req: Request, res: Response) => {
+  connectionDb.query('SELECT * FROM historical', (err: Error, results: IHistorical[]) => {
     if (err) {
       res.status(500).json({
         message: "Affichage impossible",
@@ -105,9 +103,9 @@ app.get('/api/historical', (req: any, res:any) => {
   })
 })
 
-app.post('/api/historical', (req: any, res: any) => {
+app.post('/api/historical', (req: Request, res: Response) => {
   const formHistoric = req.body;
-  connectionDb.query('INSERT INTO historical SET ?', formHistoric, (err: any, results: any) => {
+  connectionDb.query('INSERT INTO historical SET ?', formHistoric, (err: Error, results: IHistorical) => {
     if (err) {
       console.log(err)
       res.status(500).json({
@@ -121,30 +119,9 @@ app.post('/api/historical', (req: any, res: any) => {
   })
 })
 
-app.put('/api/historical/:id', (req: any, res: any) => {
+app.delete('/api/historical/:id', (req: Request, res: Response) => {
   const idHistorical = req.params.id;
-  const newHistorical = req.body;
-  connectionDb.query('UPDATE animal SET ? WHERE id = ?', [newHistorical, idHistorical], (err: any, results: any) => {
-    if (err) {
-      res.status(500).json({
-        message: 'Sauvegarde impossible',
-        error: err,
-      })
-    } else {
-      res.sendStatus(200);
-      res.json(req.body)
-    }
-  })
-/*     const newAnimal = {
-        id: animals.length + 1,
-        name: req.body.name,
-        age: req.body.price
-    } */
-})
-
-app.delete('/api/historical/:id', (req: any, res: any) => {
-  const idHistorical = req.params.id;
-  connectionDb.query('DELETE FROM historical WHERE id = ?', idHistorical, (err: any) => {
+  connectionDb.query('DELETE FROM historical WHERE id = ?', idHistorical, (err: Error) => {
     if (err) {
       console.log(err);
       res.status(500).json({
@@ -157,7 +134,7 @@ app.delete('/api/historical/:id', (req: any, res: any) => {
   })
 })
 
-app.listen(port, (err: any) => {
+app.listen(port, (err: Error) => {
   if (err) {
     throw new Error('Something bad happened...');
   }

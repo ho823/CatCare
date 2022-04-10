@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 const express = require('express');
 const app = express();
 const cors = require('cors');
@@ -30,20 +31,15 @@ app.put('/api/animal/:id', (req, res) => {
     const newAnimal = req.body;
     connectionDb.query('UPDATE animal SET ? WHERE id = ?', [newAnimal, idAnimal], (err, results) => {
         if (err) {
-            res.status(500).json({
+            return res.status(500).json({
                 message: 'Sauvegarde impossible',
                 error: err,
             });
         }
         else {
-            res.sendStatus(200);
+            return res.sendStatus(200).json(req.body);
         }
     });
-    /*     const newAnimal = {
-            id: animals.length + 1,
-            name: req.body.name,
-            age: req.body.price
-        } */
 });
 app.get('/api/vaccine', (req, res) => {
     connectionDb.query('SELECT * FROM vaccine', (err, results) => {
@@ -114,27 +110,6 @@ app.post('/api/historical', (req, res) => {
             res.status(200);
         }
     });
-});
-app.put('/api/historical/:id', (req, res) => {
-    const idHistorical = req.params.id;
-    const newHistorical = req.body;
-    connectionDb.query('UPDATE animal SET ? WHERE id = ?', [newHistorical, idHistorical], (err, results) => {
-        if (err) {
-            res.status(500).json({
-                message: 'Sauvegarde impossible',
-                error: err,
-            });
-        }
-        else {
-            res.sendStatus(200);
-            res.json(req.body);
-        }
-    });
-    /*     const newAnimal = {
-            id: animals.length + 1,
-            name: req.body.name,
-            age: req.body.price
-        } */
 });
 app.delete('/api/historical/:id', (req, res) => {
     const idHistorical = req.params.id;

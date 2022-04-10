@@ -1,12 +1,13 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity, Pressable, Modal } from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, Pressable, Modal, ScrollView } from 'react-native';
 import logoGreen from '../assets/images/logo-green.png';
 import { Ionicons } from '@expo/vector-icons';
+import { IHistorical } from '../types';
 
 export default function Historical() {
   const [error, setError] = useState() as any;
-  const [historic, setHistoric] = useState([]) as any;
+  const [historic, setHistoric] = useState<IHistorical[]>([]);
   const [modalVisible, setModalVisible] = useState(false);
   const [date, setDate] = useState('');
   const [description, setDescription] = useState('');
@@ -17,7 +18,6 @@ export default function Historical() {
       try {
         const historical = await axios.get(`http://localhost:7070/api/historical`);
         setHistoric(historical.data);
-        console.log('get', historical)
       } catch (err) {
         setError(err);
         console.log('error get', err)
@@ -29,7 +29,7 @@ export default function Historical() {
   }, []);
 
  
-   const postADescription = (e: any) => {
+   const postADescription = (e: React.SyntheticEvent) => {
     e.preventDefault();
       axios.post(`http://localhost:7070/api/historical/`, {
         date,
@@ -46,11 +46,11 @@ export default function Historical() {
   };  
 
 
-   const postDate = (e: any) => {
+  const postDate = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDate(e.target.value);
   };
 
-  const postDescription = (e: any) => {
+  const postDescription = (e: React.ChangeEvent<HTMLInputElement>) => {
     setDescription(e.target.value);
   };
 
@@ -59,35 +59,28 @@ export default function Historical() {
   };
 
 
-const deleteH = (id: number) => {
- setHistoric((prevState: any) => prevState.filter((item:any) => item.id !== id))
+const deleteAnHistoric = (id: number) => {
+ setHistoric((prevState: IHistorical[]) => prevState.filter((item:IHistorical) => item.id !== id))
 }
 
 const deleteOneHistoric = (id: number) => {
   //e.preventDefault();
-
-      axios.delete(`http://localhost:7070/api/historical/${id}`)
-    .then((response) => {
-      console.log('del', response, response.data)
-      deleteH(id)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
-    
+  axios.delete(`http://localhost:7070/api/historical/${id}`)
+  .then((response) => {
+    deleteAnHistoric(id)
+  })
+  .catch((err) => {
+    console.log(err)
+  })  
 }
 
-
-
   return (
-    <View style={styles.page}>
+    <ScrollView style={styles.page}>
       <View style={styles.imgContent}>
-        <Image style={styles.img} source={logoGreen} />
-        <Text style={styles.logoTitle}>CatCare</Text>
+          <Image style={styles.img} source={logoGreen}/>
       </View>
-    {/* Post Modal */}
+
       <Modal
-        style={styles.modal}
         animationType="slide"
         transparent={true}
         visible={modalVisible}
@@ -96,8 +89,7 @@ const deleteOneHistoric = (id: number) => {
         }}
       >
         <View style={styles.modalContainer1}>
-          <View style={styles.modalContainer2}>
-            <Text style={styles.textModal}>Hello World!</Text>
+          <View>
             <form onSubmit={postADescription}>
               <input type="text" placeholder="Date" name="date" onChange={postDate} value={date} />
               <input type="text" placeholder="Description" name="description" onChange={postDescription} value={description} />
@@ -107,36 +99,28 @@ const deleteOneHistoric = (id: number) => {
             <Pressable
               onPress={() => setModalVisible(!modalVisible)}
             >
-              <Text>Hide Modal <Ionicons name="close-circle-outline"></Ionicons></Text>
+              <Text style={styles.hideModal}>Close <Ionicons style={styles.close} name="close-circle-outline"></Ionicons></Text>
             </Pressable>
           </View>
         </View>
       </Modal>
 
       <View style={styles.historic}>
-      {historic.map((historic: any, index: number) =>
+      {historic.map((historic: IHistorical, index: number) =>
       <View key={index} style={styles.element}>
-        <Text style={styles.title}>{historic.name}</Text>
         <Text style={styles.date}>{historic.date}</Text>
-        <Text style={styles.description}>{historic.description}
-        <TouchableOpacity onPress={() => setModalVisible(true)}>
-        <Ionicons name="add-circle-outline"></Ionicons>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.updateBtn} 
-          onPress={() => setModalVisible(true)}>
-          <Ionicons name="pencil-outline"></Ionicons>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={() => deleteOneHistoric(historic.id)}>
-        <Ionicons name="trash-outline"></Ionicons>
-        </TouchableOpacity>
-
-        </Text>
+        <Text style={styles.description}>{historic.description}</Text>
+        <TouchableOpacity style={styles.action} onPress={() => setModalVisible(true)}>
+            <Ionicons  style={styles.icon} name="add-circle-outline"></Ionicons>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.action} onPress={() => deleteOneHistoric(historic.id)}>
+            <Ionicons style={styles.icon} name="trash-outline"></Ionicons>
+          </TouchableOpacity>
       </View>
       )}
       </View>
 
-    </View>
+    </ScrollView>
   );
 }
 
@@ -145,62 +129,66 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFFFFF',
   },
+  imgContent: {
+    flex: 1,
+    backgroundColor: '#FFFFFF',
+    display: 'flex',
+    flexDirection: 'row',
+    marginLeft: 15
+  },
+  img: {
+    width: 179,
+    height: 120
+  },
   title: {
     fontSize: 18,
   },
   date: {
     fontSize: 14,
-    marginRight: 10
-
+    marginRight: 10,
+  },
+  historic: {
+    flex: 3,
+    backgroundColor: '#FFFFFF',
+    margin: 20,
+    marginTop: 50
+  },
+  element: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 25,
   },
   description: {
     fontSize: 14,
     backgroundColor: 'rgba(249, 149, 79, 0.31)',
     borderRadius: 3,
     padding: 6,
-
-  },
-  historic: {
-    flex: 2,
-    backgroundColor: '#FFFFFF',
-    margin: 20,
-  },
-  element: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 25
-  },
-  imgContent: {
-    flex: 1,
-    backgroundColor: '#FFFFFF',
     display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center'
-
+    alignItems: 'center',
+    width: 300,
+    flexWrap: 'wrap'
   },
-  img: {
-    height: 120,
-    width: 120,
+  action: {
+    marginRight: 8,
+    marginLeft: 6,
   },
-  logoTitle: {
-    color: '#37C391'
+  icon: {
+    fontSize: 20
   },
   updateBtn: {
     marginLeft: 8
-
-  },
-  modal:{
-
   },
   modalContainer1: {
-    backgroundColor: 'white',
-
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    height: 250,
+    justifyContent: 'center',
+    padding: 50
   },
-  modalContainer2: {
-
+  hideModal: {
+    color: 'white',
+    marginTop: 10
   },
-  textModal: {
-
-  }
-  
+  close: {
+    fontSize: 30
+  },
 });

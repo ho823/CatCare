@@ -15,11 +15,6 @@ const linking: LinkingOptions<RootStackParamList> = {
     screens: {
       Root: {
         screens: {
-          TabOne: {
-            screens: {
-              TabOneScreen: 'hbhvvv',
-            },
-          },
           Animal: {
             screens: {
               AnimalSheet: 'animal',
