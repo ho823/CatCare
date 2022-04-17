@@ -5,9 +5,6 @@ const port = 7070;
 import { Request, Response } from "express";
 import {IAnimal, IHistorical, IMeds, IVaccine} from '../types';
 
-
-
-
 const connectionDb = require('./config');
 app.use(cors())
 

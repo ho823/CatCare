@@ -64,7 +64,6 @@ const deleteAnHistoric = (id: number) => {
 }
 
 const deleteOneHistoric = (id: number) => {
-  //e.preventDefault();
   axios.delete(`http://localhost:7070/api/historical/${id}`)
   .then((response) => {
     deleteAnHistoric(id)

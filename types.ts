@@ -4,6 +4,7 @@ export interface IAnimal {
   age: number,
   weight: number,
   sex: string,
+  race: string,
   animalId: number
 }
 

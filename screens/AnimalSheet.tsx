@@ -110,6 +110,7 @@ export default function AnimalSheet() {
             <Text style={styles.square}>{animal.age} years</Text>
             <Text style={styles.square}>{animal.weight} kg</Text>
             <Text style={styles.square}>{animal.sex}</Text>
+            <Text style={styles.square}>{animal.race}</Text>
           </View>
         </View>
         </View>
