@@ -111,10 +111,10 @@ const deleteOneHistoric = (id: number) => {
         <Text style={styles.description}>{historic.description}</Text>
         <TouchableOpacity style={styles.action} onPress={() => setModalVisible(true)}>
             <Ionicons  style={styles.icon} name="add-circle-outline"></Ionicons>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.action} onPress={() => deleteOneHistoric(historic.id)}>
-            <Ionicons style={styles.icon} name="trash-outline"></Ionicons>
-          </TouchableOpacity>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.action} onPress={() => deleteOneHistoric(historic.id)}>
+          <Ionicons style={styles.icon} name="trash-outline"></Ionicons>
+        </TouchableOpacity>
       </View>
       )}
       </View>
